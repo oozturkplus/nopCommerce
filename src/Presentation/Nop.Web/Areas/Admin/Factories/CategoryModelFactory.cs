@@ -215,7 +215,6 @@ public partial class CategoryModelFactory : ICategoryModelFactory
             model.PageSize = _catalogSettings.DefaultCategoryPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
             model.Published = true;
-            model.IncludeInTopMenu = true;
             model.AllowCustomersToSelectPageSize = true;
             model.PriceRangeFiltering = true;
             model.ManuallyPriceRange = true;

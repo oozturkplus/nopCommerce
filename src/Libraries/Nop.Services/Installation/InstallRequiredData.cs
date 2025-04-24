@@ -17,6 +17,7 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Menus;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -1431,7 +1432,6 @@ public partial class InstallationService
             ExportImportRelatedEntitiesByName = true,
             ExportImportCategoryUseLimitedToStores = false,
             CountDisplayedYearsDatePicker = 1,
-            UseAjaxLoadMenu = false,
             UseAjaxCatalogProductsLoading = true,
             EnableManufacturerFiltering = true,
             EnablePriceRangeFiltering = true,
@@ -1889,38 +1889,6 @@ public partial class InstallationService
         var eaGeneral = await Table<EmailAccount>().FirstOrDefaultAsync() ?? throw new Exception("Default email account cannot be loaded");
         await SaveSettingAsync(dictionary, new EmailAccountSettings { DefaultEmailAccountId = eaGeneral.Id });
 
-        var displayMenuItems = !_installationSettings.InstallSampleData;
-
-        await SaveSettingAsync(dictionary, new DisplayDefaultMenuItemSettings
-        {
-            DisplayHomepageMenuItem = displayMenuItems,
-            DisplayNewProductsMenuItem = displayMenuItems,
-            DisplayProductSearchMenuItem = displayMenuItems,
-            DisplayCustomerInfoMenuItem = displayMenuItems,
-            DisplayBlogMenuItem = displayMenuItems,
-            DisplayForumsMenuItem = displayMenuItems,
-            DisplayContactUsMenuItem = displayMenuItems
-        });
-
-        await SaveSettingAsync(dictionary, new DisplayDefaultFooterItemSettings
-        {
-            DisplaySitemapFooterItem = true,
-            DisplayContactUsFooterItem = true,
-            DisplayProductSearchFooterItem = true,
-            DisplayNewsFooterItem = true,
-            DisplayBlogFooterItem = true,
-            DisplayForumsFooterItem = true,
-            DisplayRecentlyViewedProductsFooterItem = true,
-            DisplayCompareProductsFooterItem = true,
-            DisplayNewProductsFooterItem = true,
-            DisplayCustomerInfoFooterItem = true,
-            DisplayCustomerOrdersFooterItem = true,
-            DisplayCustomerAddressesFooterItem = true,
-            DisplayShoppingCartFooterItem = true,
-            DisplayWishlistFooterItem = true,
-            DisplayApplyVendorAccountFooterItem = true
-        });
-
         await SaveSettingAsync(dictionary, new CaptchaSettings
         {
             ReCaptchaApiUrl = "https://www.google.com/recaptcha/",
@@ -1986,7 +1954,6 @@ public partial class InstallationService
                 "/customer/removeexternalassociation",
                 "/customer/checkusernameavailability",
                 "/catalog/searchtermautocomplete",
-                "/catalog/getcatalogroot",
                 "/addproducttocart/catalog/*",
                 "/addproducttocart/details/*",
                 "/compareproducts/add/*",
@@ -2076,6 +2043,15 @@ public partial class InstallationService
                 "/uploadfilereturnrequest",
                 "/wishlist"
             ]
+        });
+
+        await SaveSettingAsync(dictionary, new MenuSettings
+        {
+            NumberOfSubItemsPerGridElement = 3,
+            NumberOfItemsPerGridRow = 4,
+            MaximumNumberEntities = 8,
+            GridThumbPictureSize = 220,
+            MaximumMainMenuLevels = 2
         });
     }
 
@@ -2250,7 +2226,6 @@ public partial class InstallationService
                     SystemName = "AboutUs",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
-                    IncludeInFooterColumn1 = true,
                     DisplayOrder = 20,
                     Published = true,
                     Title = "About us",
@@ -2273,7 +2248,6 @@ public partial class InstallationService
                     SystemName = "ConditionsOfUse",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
-                    IncludeInFooterColumn1 = true,
                     DisplayOrder = 15,
                     Published = true,
                     Title = "Conditions of Use",
@@ -2326,7 +2300,6 @@ public partial class InstallationService
                     SystemName = "PrivacyInfo",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
-                    IncludeInFooterColumn1 = true,
                     DisplayOrder = 10,
                     Published = true,
                     Title = "Privacy notice",
@@ -2348,7 +2321,6 @@ public partial class InstallationService
                     SystemName = "ShippingInfo",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
-                    IncludeInFooterColumn1 = true,
                     DisplayOrder = 5,
                     Published = true,
                     Title = "Shipping & returns",
@@ -2370,7 +2342,6 @@ public partial class InstallationService
                     SystemName = "VendorTermsOfService",
                     IncludeInSitemap = false,
                     IsPasswordProtected = false,
-                    IncludeInFooterColumn1 = false,
                     DisplayOrder = 1,
                     Published = true,
                     Title = "Terms of services for vendors",
@@ -2543,6 +2514,16 @@ public partial class InstallationService
                     SystemKeyword = "AddNewStore",
                     Enabled = true,
                     Name = "Add a new store"
+                },
+                new() {
+                    SystemKeyword = "AddNewMenu",
+                    Enabled = true,
+                    Name = "Add a new menu"
+                },
+                new() {
+                    SystemKeyword = "AddNewMenuItem",
+                    Enabled = true,
+                    Name = "Add a new menu item"
                 },
                 new() {
                     SystemKeyword = "AddNewTopic",
@@ -2775,6 +2756,16 @@ public partial class InstallationService
                     Name = "Delete a topic"
                 },
                 new() {
+                    SystemKeyword = "DeleteMenu",
+                    Enabled = true,
+                    Name = "Delete a menu"
+                },
+                new() {
+                    SystemKeyword = "DeleteMenuItem",
+                    Enabled = true,
+                    Name = "Delete a menu item"
+                },
+                new() {
                     SystemKeyword = "DeleteVendor",
                     Enabled = true,
                     Name = "Delete a vendor"
@@ -3003,6 +2994,16 @@ public partial class InstallationService
                     SystemKeyword = "EditWarehouse",
                     Enabled = true,
                     Name = "Edit a warehouse"
+                },
+                new() {
+                    SystemKeyword = "EditMenu",
+                    Enabled = true,
+                    Name = "Edit a menu"
+                },
+                new() {
+                    SystemKeyword = "EditMenuItem",
+                    Enabled = true,
+                    Name = "Edit a menu item"
                 },
                 new() {
                     SystemKeyword = "EditTopic",
@@ -3417,6 +3418,255 @@ public partial class InstallationService
         };
 
         await _dataProvider.BulkInsertEntitiesAsync(returnRequestActions);
+    }
+
+    /// <summary>
+    /// Installs menus
+    /// </summary>
+    /// <param name="withCategories">The main menu should be automatically loaded from categories</param>
+    /// <returns>A task that represents the asynchronous operation</returns>
+    protected virtual async Task InstallMenusAsync(bool withCategories)
+    {
+        await _dataProvider.InsertEntityAsync(new Menu()
+        {
+            Name = "Categories",
+            MenuType = MenuType.Main,
+            DisplayAllCategories = true,
+            Published = withCategories
+        });
+
+        var standardMainMenu = await _dataProvider.InsertEntityAsync(new Menu()
+        {
+            Name = "Menu",
+            MenuType = MenuType.Main,
+            DisplayOrder = 0,
+            DisplayAllCategories = false,
+            Published = !withCategories
+        });
+
+        await _dataProvider.BulkInsertEntitiesAsync([
+            new MenuItem
+            {
+                MenuId = standardMainMenu.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Homepage,
+                Title = "Home page",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = standardMainMenu.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.NewProducts,
+                Title = "New products",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = standardMainMenu.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Search,
+                Title = "Search",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = standardMainMenu.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.CustomerInfo,
+                Title = "My account",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = standardMainMenu.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Blog,
+                Title = "Blog",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = standardMainMenu.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.ContactUs,
+                Title = "Contact us",
+                Published = true
+            }
+        ]);
+
+        var footerInformation = await _dataProvider.InsertEntityAsync(new Menu()
+        {
+            Name = "Information",
+            MenuType = MenuType.Footer,
+            DisplayOrder = 0,
+            Published = true
+        });
+
+        await _dataProvider.BulkInsertEntitiesAsync([
+            new MenuItem
+            {
+                MenuId = footerInformation.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Sitemap,
+                Title = "Sitemap",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerInformation.Id,
+                MenuItemType = MenuItemType.TopicPage,
+                EntityId = Table<Topic>().FirstOrDefault(t => t.SystemName == "ShippingInfo")?.Id,
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerInformation.Id,
+                MenuItemType = MenuItemType.TopicPage,
+                EntityId = Table<Topic>().FirstOrDefault(t => t.SystemName == "PrivacyInfo")?.Id,
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerInformation.Id,
+                MenuItemType = MenuItemType.TopicPage,
+                EntityId = Table<Topic>().FirstOrDefault(t => t.SystemName == "ConditionsOfUse")?.Id,
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerInformation.Id,
+                MenuItemType = MenuItemType.TopicPage,
+                EntityId = Table<Topic>().FirstOrDefault(t => t.SystemName == "AboutUs")?.Id,
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerInformation.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.ContactUs,
+                Title = "Contact us",
+                Published = true
+            },
+        ]);
+
+        var footerCustomerService = await _dataProvider.InsertEntityAsync(new Menu()
+        {
+            Name = "Customer service",
+            MenuType = MenuType.Footer,
+            DisplayOrder = 1,
+            Published = true
+        });
+
+        await _dataProvider.BulkInsertEntitiesAsync([
+            new MenuItem
+            {
+                MenuId = footerCustomerService.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Search,
+                Title = "Search",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerCustomerService.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.News,
+                Title = "News",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerCustomerService.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Boards,
+                Title = "Blog",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerCustomerService.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.RecentlyViewedProducts,
+                Title = "Recently viewed products",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerCustomerService.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.CompareProducts,
+                Title = "Compare products list",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerCustomerService.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.NewProducts,
+                Title = "New products",
+                Published = true
+            },
+        ]);
+
+        var footerMyAccount = await _dataProvider.InsertEntityAsync(new Menu()
+        {
+            Name = "My account",
+            MenuType = MenuType.Footer,
+            DisplayOrder = 2,
+            Published = true
+        });
+
+        await _dataProvider.BulkInsertEntitiesAsync([
+           new MenuItem
+            {
+                MenuId = footerMyAccount.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.CustomerInfo,
+                Title = "My account",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerMyAccount.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.CustomerOrders,
+                Title = "Orders",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerMyAccount.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.CustomerAddresses,
+                Title = "Addresses",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerMyAccount.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Cart,
+                Title = "Shopping cart",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerMyAccount.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.Wishlist,
+                Title = "Wishlist",
+                Published = true
+            },
+            new MenuItem
+            {
+                MenuId = footerMyAccount.Id,
+                MenuItemType = MenuItemType.StandardPage,
+                RouteName = NopStandardRouteNames.ApplyVendorAccount,
+                Title = "Apply for vendor account",
+                Published = true
+            },
+        ]);
     }
 
     #endregion

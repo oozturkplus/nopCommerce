@@ -14,7 +14,7 @@
         AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
     </script>
     <div class="header-menu">
-        @await Component.InvokeAsync(typeof(TopMenuViewComponent))
+        @await Component.InvokeAsync(typeof(MainMenuViewComponent))
     </div>
     <div class="master-wrapper-content" id="main" role="main">
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentBefore })

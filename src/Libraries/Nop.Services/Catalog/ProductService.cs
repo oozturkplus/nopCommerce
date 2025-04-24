@@ -585,16 +585,30 @@ public partial class ProductService : IProductService
     }
 
     /// <summary>
-    /// Gets product
+    /// Gets a product
     /// </summary>
     /// <param name="productId">Product identifier</param>
+    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product
     /// </returns>
-    public virtual async Task<Product> GetProductByIdAsync(int productId)
+    public virtual async Task<Product> GetProductByIdAsync(int productId, bool autorize = false)
     {
-        return await _productRepository.GetByIdAsync(productId, cache => default);
+        var product = await _productRepository.GetByIdAsync(productId, cache => default);
+
+        if (!autorize)
+            return product;
+
+        if (product is null || product.Deleted || !product.Published ||
+            !ProductIsAvailable(product) ||
+            !await _aclService.AuthorizeAsync(product) ||
+            !await _storeMappingService.AuthorizeAsync(product))
+        {
+            return null;
+        }
+
+        return product;
     }
 
     /// <summary>

@@ -82,6 +82,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IVendorAttributeModelFactory, VendorAttributeModelFactory>();
         services.AddScoped<IVendorModelFactory, VendorModelFactory>();
         services.AddScoped<Areas.Admin.Factories.IWidgetModelFactory, Areas.Admin.Factories.WidgetModelFactory>();
+        services.AddScoped<IMenuModelFactory, MenuModelFactory>();
 
         //factories
         services.AddScoped<Factories.IAddressModelFactory, Factories.AddressModelFactory>();
@@ -106,6 +107,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<Factories.ISitemapModelFactory, Factories.SitemapModelFactory>();
         services.AddScoped<Factories.ITopicModelFactory, Factories.TopicModelFactory>();
         services.AddScoped<Factories.IVendorModelFactory, Factories.VendorModelFactory>();
+        services.AddScoped<Factories.IMenuModelFactory, Factories.MenuModelFactory>();
 
         //helpers classes
         services.AddScoped<ITinyMceHelper, TinyMceHelper>();

@@ -308,4 +308,18 @@ public partial interface IBaseAdminModelFactory
     /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task PrepareSpecificationAttributeGroupsAsync(IList<SelectListItem> items, bool withSpecialDefaultItem = true, string defaultItemText = null);
+
+    /// <summary>
+    /// Prepare select list from constants
+    /// </summary>
+    /// <param name="items">Collection add items</param>
+    /// <param name="type">Type to extract constants</param>
+    /// <param name="useLocalization">Localize</param>
+    /// <param name="sortItems">Sort resulting items (<see cref="SelectListItem"/>)</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the select list
+    /// </returns>
+    Task ConstantsToSelectListAsync(IList<SelectListItem> items, Type type, bool useLocalization = true, bool sortItems = false);
+
 }

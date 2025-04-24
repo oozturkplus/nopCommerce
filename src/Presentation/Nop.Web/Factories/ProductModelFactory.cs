@@ -718,7 +718,6 @@ public partial class ProductModelFactory : IProductModelFactory
                 Id = catBr.Id,
                 Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
                 SeName = await _urlRecordService.GetSeNameAsync(catBr),
-                IncludeInTopMenu = catBr.IncludeInTopMenu
             });
         }
 

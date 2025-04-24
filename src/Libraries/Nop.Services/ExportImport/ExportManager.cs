@@ -227,7 +227,6 @@ public partial class ExportManager : IExportManager
             await xmlWriter.WriteStringAsync("PriceTo", category.PriceTo, await IgnoreExportCategoryPropertyAsync());
             await xmlWriter.WriteStringAsync("ManuallyPriceRange", category.ManuallyPriceRange, await IgnoreExportCategoryPropertyAsync());
             await xmlWriter.WriteStringAsync("ShowOnHomepage", category.ShowOnHomepage, await IgnoreExportCategoryPropertyAsync());
-            await xmlWriter.WriteStringAsync("IncludeInTopMenu", category.IncludeInTopMenu, await IgnoreExportCategoryPropertyAsync());
             await xmlWriter.WriteStringAsync("Published", category.Published, await IgnoreExportCategoryPropertyAsync());
             await xmlWriter.WriteStringAsync("Deleted", category.Deleted, true);
             await xmlWriter.WriteStringAsync("DisplayOrder", category.DisplayOrder);
@@ -1203,7 +1202,6 @@ public partial class ExportManager : IExportManager
             new PropertyByName<Category>("AllowCustomersToSelectPageSize", (p, _) => p.AllowCustomersToSelectPageSize, await IgnoreExportCategoryPropertyAsync()),
             new PropertyByName<Category>("PageSizeOptions", (p, _) => p.PageSizeOptions, await IgnoreExportCategoryPropertyAsync()),
             new PropertyByName<Category>("ShowOnHomepage", (p, _) => p.ShowOnHomepage, await IgnoreExportCategoryPropertyAsync()),
-            new PropertyByName<Category>("IncludeInTopMenu", (p, _) => p.IncludeInTopMenu, await IgnoreExportCategoryPropertyAsync()),
             new PropertyByName<Category>("IsLimitedToStores", (p, _) => p.LimitedToStores, await CategoryIgnoreExportLimitedToStoreAsync()),
             new PropertyByName<Category>("LimitedToStores",async (p, _) =>  await GetLimitedToStoresAsync(p), await CategoryIgnoreExportLimitedToStoreAsync()),
             new PropertyByName<Category>("Published", (p, _) => p.Published, await IgnoreExportCategoryPropertyAsync()),

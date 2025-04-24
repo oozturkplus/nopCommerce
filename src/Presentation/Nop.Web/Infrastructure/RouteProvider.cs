@@ -1,4 +1,5 @@
-﻿using Nop.Services.Installation;
+﻿using Nop.Core.Http;
+using Nop.Services.Installation;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure;
@@ -26,7 +27,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"{{area:exists}}/{{controller=Home}}/{{action=Index}}/{{id?}}");
 
         //home page
-        endpointRouteBuilder.MapControllerRoute(name: "Homepage",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Homepage,
             pattern: $"{lang}",
             defaults: new { controller = "Home", action = "Index" });
 
@@ -51,7 +52,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Customer", action = "Logout" });
 
         //shopping cart
-        endpointRouteBuilder.MapControllerRoute(name: "ShoppingCart",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Cart,
             pattern: $"{lang}/cart/",
             defaults: new { controller = "ShoppingCart", action = "Cart" });
 
@@ -66,7 +67,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "ShoppingCart", action = "SelectShippingOption" });
 
         //wishlist
-        endpointRouteBuilder.MapControllerRoute(name: "Wishlist",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Wishlist,
             pattern: $"{lang}/wishlist/{{customerGuid?}}",
             defaults: new { controller = "ShoppingCart", action = "Wishlist" });
 
@@ -76,11 +77,11 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "ShoppingCart", action = "CheckoutAttributeChange" });
 
         //customer account links
-        endpointRouteBuilder.MapControllerRoute(name: "CustomerInfo",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.CustomerInfo,
             pattern: $"{lang}/customer/info",
             defaults: new { controller = "Customer", action = "Info" });
 
-        endpointRouteBuilder.MapControllerRoute(name: "CustomerAddresses",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.CustomerAddresses,
             pattern: $"{lang}/customer/addresses",
             defaults: new { controller = "Customer", action = "Addresses" });
 
@@ -94,7 +95,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             pattern: $"customer/removeexternalassociation",
             defaults: new { controller = "Customer", action = "RemoveExternalAssociation" });
 
-        endpointRouteBuilder.MapControllerRoute(name: "CustomerOrders",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.CustomerOrders,
             pattern: $"{lang}/order/history/{{limit?}}",
             defaults: new { controller = "Order", action = "CustomerOrders" });
 
@@ -107,12 +108,12 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Order", action = "CustomerRecurringPayments" });
 
         //contact us
-        endpointRouteBuilder.MapControllerRoute(name: "ContactUs",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.ContactUs,
             pattern: $"{lang}/contactus",
             defaults: new { controller = "Common", action = "ContactUs" });
 
         //product search
-        endpointRouteBuilder.MapControllerRoute(name: "ProductSearch",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Search,
             pattern: $"{lang}/search/",
             defaults: new { controller = "Catalog", action = "Search" });
 
@@ -142,47 +143,47 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Common", action = "SetStoreTheme" });
 
         //recently viewed products
-        endpointRouteBuilder.MapControllerRoute(name: "RecentlyViewedProducts",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.RecentlyViewedProducts,
             pattern: $"{lang}/recentlyviewedproducts/",
             defaults: new { controller = "Product", action = "RecentlyViewedProducts" });
 
         //new products
         endpointRouteBuilder.MapControllerRoute(name: "NewProducts",
             pattern: $"{lang}/newproducts/",
-            defaults: new { controller = "Catalog", action = "NewProducts" });
+            defaults: new { controller = "Catalog", action = NopStandardRouteNames.NewProducts });
 
         //blog
-        endpointRouteBuilder.MapControllerRoute(name: "Blog",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Blog,
             pattern: $"{lang}/blog",
             defaults: new { controller = "Blog", action = "List" });
 
         //news
-        endpointRouteBuilder.MapControllerRoute(name: "NewsArchive",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.News,
             pattern: $"{lang}/news",
             defaults: new { controller = "News", action = "List" });
 
         //forum
-        endpointRouteBuilder.MapControllerRoute(name: "Boards",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Boards,
             pattern: $"{lang}/boards",
             defaults: new { controller = "Boards", action = "Index" });
 
         //compare products
-        endpointRouteBuilder.MapControllerRoute(name: "CompareProducts",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.CompareProducts,
             pattern: $"{lang}/compareproducts/",
             defaults: new { controller = "Product", action = "CompareProducts" });
 
         //product tags
-        endpointRouteBuilder.MapControllerRoute(name: "ProductTagsAll",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.ProductTags,
             pattern: $"{lang}/producttag/all/",
             defaults: new { controller = "Catalog", action = "ProductTagsAll" });
 
         //manufacturers
-        endpointRouteBuilder.MapControllerRoute(name: "ManufacturerList",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Manufacturers,
             pattern: $"{lang}/manufacturer/all/",
             defaults: new { controller = "Catalog", action = "ManufacturerAll" });
 
         //vendors
-        endpointRouteBuilder.MapControllerRoute(name: "VendorList",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Vendors,
             pattern: $"{lang}/vendor/all/",
             defaults: new { controller = "Catalog", action = "VendorAll" });
 
@@ -463,7 +464,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Common", action = "ContactVendor" });
 
         //apply for vendor account
-        endpointRouteBuilder.MapControllerRoute(name: "ApplyVendorAccount",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.ApplyVendorAccount,
             pattern: $"{lang}/vendor/apply",
             defaults: new { controller = "Vendor", action = "ApplyVendor" });
 
@@ -478,7 +479,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Customer", action = "GdprTools" });
 
         //customer check gift card balance 
-        endpointRouteBuilder.MapControllerRoute(name: "CheckGiftCardBalance",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.CheckGiftCardBalance,
             pattern: $"{lang}/customer/checkgiftcardbalance",
             defaults: new { controller = "Customer", action = "CheckGiftCardBalance" });
 
@@ -520,15 +521,6 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         endpointRouteBuilder.MapControllerRoute(name: "TopicAuthenticate",
             pattern: $"topic/authenticate",
             defaults: new { controller = "Topic", action = "Authenticate" });
-
-        //prepare top menu (AJAX)
-        endpointRouteBuilder.MapControllerRoute(name: "GetCatalogRoot",
-            pattern: $"catalog/getcatalogroot",
-            defaults: new { controller = "Catalog", action = "GetCatalogRoot" });
-
-        endpointRouteBuilder.MapControllerRoute(name: "GetCatalogSubCategories",
-            pattern: $"catalog/getcatalogsubcategories",
-            defaults: new { controller = "Catalog", action = "GetCatalogSubCategories" });
 
         //Catalog products (AJAX)
         endpointRouteBuilder.MapControllerRoute(name: "GetCategoryProducts",
@@ -714,7 +706,7 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
             defaults: new { controller = "Common", action = "RobotsTextFile" });
 
         //sitemap
-        endpointRouteBuilder.MapControllerRoute(name: "Sitemap",
+        endpointRouteBuilder.MapControllerRoute(name: NopStandardRouteNames.Sitemap,
             pattern: $"{lang}/sitemap",
             defaults: new { controller = "Common", action = "Sitemap" });
 

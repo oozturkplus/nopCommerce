@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
+﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -980,6 +980,38 @@ public partial class BaseAdminModelFactory : IBaseAdminModelFactory
 
         //insert special item for the default value
         await PrepareDefaultItemAsync(items, withSpecialDefaultItem, defaultItemText, defaultItemValue);
+    }
+
+    /// <summary>
+    /// Prepare select list from constants
+    /// </summary>
+    /// <param name="items">Collection add items</param>
+    /// <param name="type">Type to extract constants</param>
+    /// <param name="useLocalization">Localize</param>
+    /// <param name="sortItems">Sort resulting items (<see cref="SelectListItem"/>)</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the select list
+    /// </returns>
+    public virtual async Task ConstantsToSelectListAsync(IList<SelectListItem> items, Type type, bool useLocalization = true, bool sortItems = false)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(type);
+
+        var result = new List<SelectListItem>();
+        var fields = type
+            .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            .Where(f => f.IsLiteral && !f.IsInitOnly);
+
+        foreach (var prop in fields)
+        {
+            var resourceName = $"{NopLocalizationDefaults.LiteralLocaleStringResourcesPrefix}{type.FullName}.{prop.Name}";
+            var resourceValue = useLocalization ? await _localizationService.GetResourceAsync(resourceName) : CommonHelper.SplitCamelCaseWord(prop.Name);
+
+            result.Add(new SelectListItem { Value = (string)prop.GetRawConstantValue(), Text = resourceValue });
+        }
+
+        ((List<SelectListItem>)items).AddRange(sortItems ? result.OrderBy(x => x.Text) : result);
     }
 
     #endregion

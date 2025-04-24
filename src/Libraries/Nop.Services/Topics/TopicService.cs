@@ -61,13 +61,26 @@ public partial class TopicService : ITopicService
     /// Gets a topic
     /// </summary>
     /// <param name="topicId">The topic identifier</param>
+    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the topic
     /// </returns>
-    public virtual async Task<Topic> GetTopicByIdAsync(int topicId)
+    public virtual async Task<Topic> GetTopicByIdAsync(int topicId, bool autorize = false)
     {
-        return await _topicRepository.GetByIdAsync(topicId, cache => default);
+        var topic = await _topicRepository.GetByIdAsync(topicId, cache => default);
+
+        if (!autorize)
+            return topic;
+
+        if (topic is null || !topic.Published ||
+            !await _aclService.AuthorizeAsync(topic) ||
+            !await _storeMappingService.AuthorizeAsync(topic))
+        {
+            return null;
+        }
+
+        return topic;
     }
 
     /// <summary>
@@ -116,13 +129,11 @@ public partial class TopicService : ITopicService
     /// <param name="storeId">Store identifier; pass 0 to load all records</param>
     /// <param name="ignoreAcl">A value indicating whether to ignore ACL rules</param>
     /// <param name="showHidden">A value indicating whether to show hidden topics</param>
-    /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the topics
     /// </returns>
-    public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId,
-        bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
+    public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId, bool ignoreAcl = false, bool showHidden = false)
     {
         var customer = await _workContext.GetCurrentCustomerAsync();
         var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
@@ -140,7 +151,7 @@ public partial class TopicService : ITopicService
             {
                 query = query.Where(t => t.Published);
 
-                query = query.Where(t => 
+                query = query.Where(t =>
                     DateTime.UtcNow >= (t.AvailableStartDateTimeUtc ?? SqlDateTime.MinValue.Value) &&
                     DateTime.UtcNow <= (t.AvailableEndDateTimeUtc ?? SqlDateTime.MaxValue.Value));
 
@@ -149,15 +160,12 @@ public partial class TopicService : ITopicService
                     query = await _aclService.ApplyAcl(query, customerRoleIds);
             }
 
-            if (onlyIncludedInTopMenu)
-                query = query.Where(t => t.IncludeInTopMenu);
-
             return query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
         }, cache =>
         {
             return ignoreAcl
-                ? cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu)
-                : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, customerRoleIds);
+                ? cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllCacheKey, storeId, showHidden)
+                : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, customerRoleIds);
         });
     }
 
@@ -168,18 +176,16 @@ public partial class TopicService : ITopicService
     /// <param name="keywords">Keywords to search into body or title</param>
     /// <param name="ignoreAcl">A value indicating whether to ignore ACL rules</param>
     /// <param name="showHidden">A value indicating whether to show hidden topics</param>
-    /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the topics
     /// </returns>
     public virtual async Task<IList<Topic>> GetAllTopicsAsync(int storeId, string keywords,
-        bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
+        bool ignoreAcl = false, bool showHidden = false)
     {
         var topics = await GetAllTopicsAsync(storeId,
             ignoreAcl: ignoreAcl,
-            showHidden: showHidden,
-            onlyIncludedInTopMenu: onlyIncludedInTopMenu);
+            showHidden: showHidden);
 
         if (!string.IsNullOrWhiteSpace(keywords))
         {

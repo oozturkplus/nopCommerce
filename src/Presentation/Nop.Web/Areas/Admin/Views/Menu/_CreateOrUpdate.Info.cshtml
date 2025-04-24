@@ -1,0 +1,78 @@
+﻿@using Nop.Core.Domain.Menus
+@model MenuModel
+
+<div class="card-body">
+    @(await Html.LocalizedEditorAsync<MenuModel, MenuLocalizedModel>("menu-localized",
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="@Model.Locales[item].Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
+        </div>
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+    </div>,
+    @<div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Name" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Name" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>))
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="MenuTypeId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="MenuTypeId" asp-items="Model.AvailableMenuTypes" />
+            <span asp-validation-for="MenuTypeId"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+            <span asp-validation-for="Published"></span>
+        </div>
+    </div>
+    <div class="form-group row row-footer">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting row">
+        <div class="col-md-3">
+            <nop-label asp-for="CssClass" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CssClass" />
+            <span asp-validation-for="CssClass"></span>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync(typeof(AclCustomerRolesViewComponent), Model)
+</div>
+<script asp-location="Footer">
+    $(function () {
+        const menuTypeElement = $('#@Html.IdFor(model => model.MenuTypeId)');
+
+        menuTypeElement.on('change', function () {
+            $('.row-footer').toggleClass('d-none', $(this).val() != '@((int)MenuType.Footer)');
+            $('.row-main').toggleClass('d-none', $(this).val() != '@((int)MenuType.Main)');
+        });
+
+        menuTypeElement.trigger('change');
+    });
+</script>

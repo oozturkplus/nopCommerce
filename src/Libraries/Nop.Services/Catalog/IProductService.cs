@@ -73,14 +73,15 @@ public partial interface IProductService
     Task<IPagedList<Product>> GetProductsMarkedAsNewAsync(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
     /// <summary>
-    /// Gets product
+    /// Gets a product
     /// </summary>
     /// <param name="productId">Product identifier</param>
+    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product
     /// </returns>
-    Task<Product> GetProductByIdAsync(int productId);
+    Task<Product> GetProductByIdAsync(int productId, bool autorize = false);
 
     /// <summary>
     /// Gets products by identifier

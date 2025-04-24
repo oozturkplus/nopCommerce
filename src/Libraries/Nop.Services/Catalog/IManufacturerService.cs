@@ -77,11 +77,12 @@ public partial interface IManufacturerService
     /// Gets a manufacturer
     /// </summary>
     /// <param name="manufacturerId">Manufacturer identifier</param>
+    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the manufacturer
     /// </returns>
-    Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId);
+    Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId, bool autorize = false);
 
     /// <summary>
     /// Gets the manufacturers by category identifier
