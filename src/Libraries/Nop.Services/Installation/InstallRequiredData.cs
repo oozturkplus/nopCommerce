@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using Nop.Core;
+using Nop.Core.ArtificialIntelligence;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
@@ -33,6 +34,7 @@ using Nop.Core.Http;
 using Nop.Core.Security;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Common.ArtificialIntelligence;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Messages;
@@ -1461,6 +1463,16 @@ public partial class InstallationService
             ProductUrlStructureTypeId = (int)ProductUrlStructureType.Product,
             ActiveSearchProviderSystemName = string.Empty,
             UseStandardSearchWhenSearchProviderThrowsException = true
+        });
+
+        await SaveSettingAsync(dictionary, new ArtificialIntelligenceSettings
+        {
+            Enabled = false,
+            ChatGptApiKey = string.Empty,
+            DeepSeekApiKey = string.Empty,
+            GeminiApiKey = string.Empty,
+            ProviderType = ArtificialIntelligenceProviderType.Gemini,
+            RequestTimeout = ArtificialIntelligenceDefaults.RequestTimeout
         });
 
         await SaveSettingAsync(dictionary, new LocalizationSettings

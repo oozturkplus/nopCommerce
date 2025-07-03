@@ -224,6 +224,7 @@
             <div class="col-md-9">
                 <nop-editor asp-for="FullDescription" asp-template="RichEditor" />
                 <span asp-validation-for="FullDescription"></span>
+                @await Component.InvokeAsync(typeof(FullDescriptionGeneratorViewComponent), Model)
             </div>
         </div>
         </div>))

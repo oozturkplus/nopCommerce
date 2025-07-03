@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.ArtificialIntelligence;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
@@ -746,6 +747,16 @@ public partial class SettingController : BaseAdminController
             await _settingService.SaveSettingAsync(catalogSettings, x => x.IgnoreAcl, 0, false);
             await _settingService.SaveSettingAsync(catalogSettings, x => x.IgnoreStoreLimitations, 0, false);
             await _settingService.SaveSettingAsync(catalogSettings, x => x.CacheProductPrices, 0, false);
+
+            var artificialIntelligenceSettings = await _settingService.LoadSettingAsync<ArtificialIntelligenceSettings>();
+
+            artificialIntelligenceSettings.Enabled = model.ArtificialIntelligenceSettingsModel.Enabled;
+            artificialIntelligenceSettings.ProviderType = (ArtificialIntelligenceProviderType)model.ArtificialIntelligenceSettingsModel.ProviderTypeId;
+            artificialIntelligenceSettings.ChatGptApiKey = model.ArtificialIntelligenceSettingsModel.ChatGptApiKey;
+            artificialIntelligenceSettings.DeepSeekApiKey = model.ArtificialIntelligenceSettingsModel.DeepSeekApiKey;
+            artificialIntelligenceSettings.GeminiApiKey = model.ArtificialIntelligenceSettingsModel.GeminiApiKey;
+
+            await _settingService.SaveSettingAsync(artificialIntelligenceSettings);
 
             //now clear settings cache
             await _settingService.ClearCacheAsync();

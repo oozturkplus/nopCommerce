@@ -1,0 +1,97 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Nop.Core.ArtificialIntelligence
+@using Nop.Web.Framework.TagHelpers.Admin
+@using Nop.Web.Framework.TagHelpers.Shared
+@model CatalogSettingsModel
+
+<div class="card-body">
+    @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.Info"))
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="ArtificialIntelligenceSettingsModel.Enabled"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ArtificialIntelligenceSettingsModel.Enabled"/>
+            <span asp-validation-for="ArtificialIntelligenceSettingsModel.Enabled"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ArtificialIntelligenceSettingsModel.Enabled">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.ProviderTypeId"/>
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="ArtificialIntelligenceSettingsModel.ProviderTypeId" asp-items="Model.ArtificialIntelligenceSettingsModel.AvailableProviderType"/>
+                <span asp-validation-for="IgnoreStoreLimitations"></span>
+            </div>
+        </div>
+        <div id="pnlGeminiApiKey" class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.GeminiApiKey"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.GeminiApiKey"/>
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.GeminiApiKey"></span>
+                @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.GeminiApiKey.Instruction"))
+            </div>
+        </div>
+        <div id="pnlChatGptApiKey" class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey"/>
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.ChatGptApiKey"></span>
+                @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ChatGptApiKey.Instruction"))
+            </div>
+        </div>
+        <div id="pnlDeepSeekApiKey" class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey"/>
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey"/>
+                <span asp-validation-for="ArtificialIntelligenceSettingsModel.DeepSeekApiKey"></span>
+                @Html.Raw(T("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey.Instruction"))
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+
+<script asp-location="Footer">
+    $(function() {
+        $("#@Html.IdFor(model => model.ArtificialIntelligenceSettingsModel.ProviderTypeId)").change(function () {
+            var selectedItem = $(this).val();
+            showApiSetting(selectedItem);
+        });
+    });
+
+    $(function () {
+        showApiSetting($("#@Html.IdFor(model => model.ArtificialIntelligenceSettingsModel.ProviderTypeId)").val());
+    });
+
+    function showApiSetting(selectedItem)
+    {        
+        switch(selectedItem)
+        {
+            case "@((int)ArtificialIntelligenceProviderType.Gemini)":
+            {                
+                $("#pnlGeminiApiKey").show();
+                $("#pnlChatGptApiKey").hide();
+                $("#pnlDeepSeekApiKey").hide();
+            }break;
+            case "@((int)ArtificialIntelligenceProviderType.ChatGpt)":
+            {
+                $("#pnlGeminiApiKey").hide();
+                $("#pnlChatGptApiKey").show();
+                $("#pnlDeepSeekApiKey").hide();
+            }break;
+             case "@((int)ArtificialIntelligenceProviderType.DeepSeek)":
+            {
+                $("#pnlGeminiApiKey").hide();
+                $("#pnlChatGptApiKey").hide();
+                $("#pnlDeepSeekApiKey").show();
+            }break;
+        }
+    }
+</script>

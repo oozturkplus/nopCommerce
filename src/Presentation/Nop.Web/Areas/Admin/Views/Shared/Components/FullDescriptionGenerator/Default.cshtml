@@ -1,0 +1,17 @@
+@model ProductModel
+
+<script>
+    var pnameEl = $("#@Html.IdFor(model => model.Name)");
+</script>
+
+<input type="hidden" id="ai-generated-description" onclick="update_description()"/>
+
+<button style="width:100%" onclick="javascript:OpenWindow('@Url.Content("~/Admin/Product/AiFullDescriptionGeneratorPopup?productName=")' + pnameEl.val(), 1024, 768, true); return false;" class="btn btn-default"><i class="fa fa-comments"></i>@T("Admin.Catalog.Products.AiFullDescription.Generate").Text</button>
+
+<script asp-location="Footer">
+    function update_description()
+    {
+        var text = $('#ai-generated-description').val();
+        $("#@Html.IdFor(model => model.FullDescription)").summernote("code", text);
+    }    
+</script>

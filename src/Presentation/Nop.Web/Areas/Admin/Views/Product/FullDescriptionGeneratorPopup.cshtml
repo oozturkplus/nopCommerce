@@ -1,0 +1,116 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Nop.Core.ArtificialIntelligence
+@using Nop.Services
+@using Nop.Web.Framework.TagHelpers.Admin
+@using Nop.Web.Framework.TagHelpers.Shared
+@model ArtificialIntelligenceFullDescriptionModel
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.AiGenerateFullDescription").Text;
+
+    @if (ViewBag.SaveDescription == true)
+    {
+        <script>
+            try {                
+                var el = $(window.opener.document.getElementById('ai-generated-description'));
+                el.val('@Html.Raw(Model.GeneratedDescription)');
+                el.click();                 
+            }
+            catch (e) {
+            }
+            window.close();
+        </script>
+    }
+}
+
+<form asp-controller="Product" asp-action="FullDescriptionGeneratorPopup">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="content-header clearfix">
+                <h1 class="float-left">
+                    @T("Admin.Catalog.Products.AiGenerateFullDescription")
+                </h1>
+                <div class="float-right">
+                    @if (!string.IsNullOrEmpty(Model.GeneratedDescription))
+                    {
+                        <button type="submit" name="save" class="btn btn-primary">
+                            <i class="far fa-floppy-disk"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    }
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <nop-label asp-for="ProductName" />
+                        <nop-editor asp-for="ProductName"/>
+                        <span asp-validation-for="ProductName"></span>
+                    </div>
+                    <div class="form-group row">
+                        <nop-label asp-for="Keywords"/>
+                        <nop-textarea asp-for="Keywords"/>
+                        <span asp-validation-for="Keywords"></span>
+                    </div>
+                    <div class="form-group row">
+                        <nop-label asp-for="ToneOfVoiceId"/>
+                        <nop-select asp-for="ToneOfVoiceId" asp-items="@(await ((ToneOfVoiceType)Model.ToneOfVoiceId).ToSelectListAsync())"/>
+                        <span asp-validation-for="ToneOfVoiceId"></span>
+                    </div>
+                    <div id="pnlCustomToneOfVoice" class="form-group row">
+                        <nop-label asp-for="CustomToneOfVoice"/>
+                        <nop-editor asp-for="CustomToneOfVoice"/>
+                        <span asp-validation-for="CustomToneOfVoice"></span>
+                    </div>
+                    <div class="form-group row">
+                        <nop-label asp-for="Instructions"/>
+                        <nop-editor asp-for="Instructions"/>
+                        <span asp-validation-for="Instructions"></span>
+                    </div>
+                    <div class="form-group row">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-comments"></i>
+                            @T("Admin.Catalog.Products.AiFullDescription.Generate")
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-5 offset-1">
+                    <div class="form-group row">
+                        <nop-label asp-for="GeneratedDescription" />
+                        <div>
+                            @Html.Raw(Model.GeneratedDescription)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</form>
+
+<script asp-location="Footer">
+    $(function() {
+        $("#@Html.IdFor(model => model.ToneOfVoiceId)").change(function () {
+        var selectedItem = $(this).val();
+            showCustomToneOfVoice(selectedItem);
+        });
+    });    
+
+    $(function () {
+        showCustomToneOfVoice($("#@Html.IdFor(model => model.ToneOfVoiceId)").val());
+    });
+
+    function showCustomToneOfVoice(selectedItem)
+    {        
+        if(selectedItem == "@((int)ToneOfVoiceType.Custom)")
+        {
+            $("#pnlCustomToneOfVoice").show();
+        } else {
+            $("#pnlCustomToneOfVoice").hide();
+        }    
+    }
+</script>

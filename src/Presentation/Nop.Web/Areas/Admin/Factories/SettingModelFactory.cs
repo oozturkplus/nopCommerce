@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
+using Nop.Core.ArtificialIntelligence;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
@@ -179,6 +180,30 @@ public partial class SettingModelFactory : ISettingModelFactory
         searchModel.SetGridPageSize();
 
         return Task.FromResult(searchModel);
+    }
+
+    /// <summary>
+    /// Prepare artificial intelligence settings model
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    protected virtual async Task<ArtificialIntelligenceSettingsModel> PrepareArtificialIntelligenceSettingsModelAsync(ArtificialIntelligenceSettingsModel model)
+    {
+        ArgumentNullException.ThrowIfNull(model);
+
+        var artificialIntelligenceSettings = await _settingService.LoadSettingAsync<ArtificialIntelligenceSettings>();
+
+        model.Enabled = artificialIntelligenceSettings.Enabled;
+        model.ChatGptApiKey = artificialIntelligenceSettings.ChatGptApiKey;
+        model.DeepSeekApiKey = artificialIntelligenceSettings.DeepSeekApiKey;
+        model.GeminiApiKey = artificialIntelligenceSettings.GeminiApiKey;
+        model.ProviderTypeId = (int)artificialIntelligenceSettings.ProviderType;
+
+        //prepare available translation services
+        var availableProviderType = await ArtificialIntelligenceProviderType.Gemini.ToSelectListAsync(false);
+        model.AvailableProviderType = availableProviderType.ToList();
+
+        return model;
     }
 
     /// <summary>
@@ -1307,6 +1332,8 @@ public partial class SettingModelFactory : ISettingModelFactory
         //prepare nested search model
         await PrepareSortOptionSearchModelAsync(model.SortOptionSearchModel);
         await _reviewTypeModelFactory.PrepareReviewTypeSearchModelAsync(model.ReviewTypeSearchModel);
+
+        await PrepareArtificialIntelligenceSettingsModelAsync(model.ArtificialIntelligenceSettingsModel);
 
         return model;
     }

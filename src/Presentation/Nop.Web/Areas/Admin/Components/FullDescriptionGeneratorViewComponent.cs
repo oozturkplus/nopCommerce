@@ -1,0 +1,39 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Core.ArtificialIntelligence;
+using Nop.Web.Areas.Admin.Models.Catalog;
+using Nop.Web.Framework.Components;
+
+namespace Nop.Web.Areas.Admin.Components;
+
+/// <summary>
+/// Represents view component to use artificial intelligence service to generate product's full description
+/// </summary>
+public class FullDescriptionGeneratorViewComponent : NopViewComponent
+{
+    #region Filds
+
+    protected readonly ArtificialIntelligenceSettings _artificialIntelligenceSettings;
+
+    #endregion
+
+    #region Ctor
+
+    public FullDescriptionGeneratorViewComponent(ArtificialIntelligenceSettings artificialIntelligenceSettings)
+    {
+        _artificialIntelligenceSettings = artificialIntelligenceSettings;
+    }
+
+    #endregion
+
+    #region Methods
+
+    public IViewComponentResult Invoke(object additionalData)
+    {
+        if (additionalData is not ProductModel model || !_artificialIntelligenceSettings.Enabled)
+            return Content(string.Empty);
+
+        return View(model);
+    }
+
+    #endregion
+}

@@ -46,6 +46,7 @@ using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
+using Nop.Services.Common.ArtificialIntelligence;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -299,6 +300,7 @@ public partial class BaseNopTest
         services.AddTransient<IProductTagService, ProductTagService>();
         services.AddTransient<IAddressService, AddressService>();
         services.AddTransient<IAffiliateService, AffiliateService>();
+        services.AddTransient<IArtificialIntelligenceService, ArtificialIntelligenceService>();
         services.AddTransient<IVendorService, VendorService>();
 
         //attribute services
