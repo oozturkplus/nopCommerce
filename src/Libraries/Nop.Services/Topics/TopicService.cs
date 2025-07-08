@@ -61,26 +61,13 @@ public partial class TopicService : ITopicService
     /// Gets a topic
     /// </summary>
     /// <param name="topicId">The topic identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the topic
     /// </returns>
-    public virtual async Task<Topic> GetTopicByIdAsync(int topicId, bool autorize = false)
+    public virtual async Task<Topic> GetTopicByIdAsync(int topicId)
     {
-        var topic = await _topicRepository.GetByIdAsync(topicId, cache => default);
-
-        if (!autorize)
-            return topic;
-
-        if (topic is null || !topic.Published ||
-            !await _aclService.AuthorizeAsync(topic) ||
-            !await _storeMappingService.AuthorizeAsync(topic))
-        {
-            return null;
-        }
-
-        return topic;
+        return await _topicRepository.GetByIdAsync(topicId, cache => default);
     }
 
     /// <summary>

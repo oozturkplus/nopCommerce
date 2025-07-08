@@ -76,12 +76,11 @@ public partial interface IProductService
     /// Gets a product
     /// </summary>
     /// <param name="productId">Product identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the product
     /// </returns>
-    Task<Product> GetProductByIdAsync(int productId, bool autorize = false);
+    Task<Product> GetProductByIdAsync(int productId);
 
     /// <summary>
     /// Gets products by identifier

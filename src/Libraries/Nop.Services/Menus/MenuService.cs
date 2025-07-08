@@ -1,7 +1,5 @@
-﻿using System.Linq.Expressions;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Menus;
 using Nop.Data;
 using Nop.Services.Catalog;
@@ -241,26 +239,6 @@ public partial class MenuService : IMenuService
     #endregion
 
     #region Menu items
-
-    /// <summary>
-    /// Gets title of the menu item
-    /// </summary>
-    /// <typeparam name="TEntity">Type of localized entity</typeparam>
-    /// <param name="menuItem">Menu item</param>
-    /// <param name="entity">Entity</param>
-    /// <param name="keySelector">Key selector</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the localized title
-    /// </returns>
-    public virtual async Task<string> GetLocalizedMenuItemTitleAsync<TEntity>(MenuItem menuItem, TEntity entity, Expression<Func<TEntity, string>> keySelector)
-        where TEntity : BaseEntity, ILocalizedEntity
-    {
-        if (entity is null)
-            return await _localizationService.GetLocalizedAsync(menuItem, m => m.Title);
-
-        return await _localizationService.GetLocalizedAsync(entity, keySelector);
-    }
 
     /// <summary>
     /// Deletes a menu item

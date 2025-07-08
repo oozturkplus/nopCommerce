@@ -186,26 +186,13 @@ public partial class ManufacturerService : IManufacturerService
     /// Gets a manufacturer
     /// </summary>
     /// <param name="manufacturerId">Manufacturer identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the manufacturer
     /// </returns>
-    public virtual async Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId, bool autorize = false)
+    public virtual async Task<Manufacturer> GetManufacturerByIdAsync(int manufacturerId)
     {
-        var manufacturer =  await _manufacturerRepository.GetByIdAsync(manufacturerId, cache => default);
-
-        if (!autorize)
-            return manufacturer;
-
-        if (manufacturer is null || manufacturer.Deleted || !manufacturer.Published ||
-            !await _aclService.AuthorizeAsync(manufacturer) ||
-            !await _storeMappingService.AuthorizeAsync(manufacturer))
-        {
-            return null;
-        }
-
-        return manufacturer;
+        return await _manufacturerRepository.GetByIdAsync(manufacturerId, cache => default);
     }
 
     /// <summary>

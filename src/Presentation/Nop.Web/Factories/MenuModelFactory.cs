@@ -91,13 +91,28 @@ public partial class MenuModelFactory : IMenuModelFactory
 
     #region Utilities
 
-    protected virtual async Task<(string title, string url)> GetAutorizedCategoryInfoAsync(MenuItem menuItem)
+    /// <summary>
+    /// Get category info with authorization check
+    /// </summary>
+    /// <param name="menuItem">Menu item</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains category's title and URL
+    ///</returns>
+    protected virtual async Task<(string title, string url)> GetAuthorizedCategoryInfoAsync(MenuItem menuItem)
     {
         var categoryId = menuItem.EntityId ?? 0;
         if (categoryId == 0)
             return (await _localizationService.GetLocalizedAsync(menuItem, m => m.Title), string.Empty);
 
-        var category = await _categoryService.GetCategoryByIdAsync(categoryId, autorize: true);
+        var category = await _categoryService.GetCategoryByIdAsync(categoryId);
+
+        if (category is null || category.Deleted || !category.Published ||
+            !await _aclService.AuthorizeAsync(category) ||
+            !await _storeMappingService.AuthorizeAsync(category))
+        {
+            return (string.Empty, string.Empty);
+        }
 
         var title = await _localizationService.GetLocalizedAsync(category, m => m.Name);
         var url = await _nopUrlHelper.RouteGenericEntityAsync(category);
@@ -105,13 +120,28 @@ public partial class MenuModelFactory : IMenuModelFactory
         return (title, url);
     }
 
-    protected virtual async Task<(string title, string url)> GetAutorizedManufacturerInfoAsync(MenuItem menuItem)
+    /// <summary>
+    /// Get manufacturer info with authorization check
+    /// </summary>
+    /// <param name="menuItem">Menu item</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains manufacturer's title and URL
+    ///</returns>
+    protected virtual async Task<(string title, string url)> GetAuthorizedManufacturerInfoAsync(MenuItem menuItem)
     {
         var manufacturerId = menuItem.EntityId ?? 0;
         if (manufacturerId == 0)
             return (await _localizationService.GetLocalizedAsync(menuItem, m => m.Title), _nopUrlHelper.RouteUrl(NopStandardRouteNames.Manufacturers));
 
-        var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId, autorize: true);
+        var manufacturer = await _manufacturerService.GetManufacturerByIdAsync(manufacturerId);
+
+        if (manufacturer is null || manufacturer.Deleted || !manufacturer.Published ||
+            !await _aclService.AuthorizeAsync(manufacturer) ||
+            !await _storeMappingService.AuthorizeAsync(manufacturer))
+        {
+            return (string.Empty, string.Empty);
+        }
 
         var title = await _localizationService.GetLocalizedAsync(manufacturer, m => m.Name);
         var url = await _nopUrlHelper.RouteGenericEntityAsync(manufacturer);
@@ -119,13 +149,29 @@ public partial class MenuModelFactory : IMenuModelFactory
         return (title, url);
     }
 
-    protected virtual async Task<(string title, string url)> GetAutorizedProductInfoAsync(MenuItem menuItem)
+    /// <summary>
+    /// Get product info with authorization check
+    /// </summary>
+    /// <param name="menuItem">Menu item</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains product's title and URL
+    ///</returns>
+    protected virtual async Task<(string title, string url)> GetAuthorizedProductInfoAsync(MenuItem menuItem)
     {
         var productId = menuItem.EntityId ?? 0;
         if (productId == 0)
             return (await _localizationService.GetLocalizedAsync(menuItem, m => m.Title), string.Empty);
 
-        var product = await _productService.GetProductByIdAsync(productId, autorize: true);
+        var product = await _productService.GetProductByIdAsync(productId);
+
+        if (product is null || product.Deleted || !product.Published ||
+            !_productService.ProductIsAvailable(product) ||
+            !await _aclService.AuthorizeAsync(product) ||
+            !await _storeMappingService.AuthorizeAsync(product))
+        {
+            return (string.Empty, string.Empty);
+        }
 
         var title = await _localizationService.GetLocalizedAsync(product, m => m.Name);
         var url = await _nopUrlHelper.RouteGenericEntityAsync(product);
@@ -133,24 +179,53 @@ public partial class MenuModelFactory : IMenuModelFactory
         return (title, url);
     }
 
-    protected virtual async Task<(string title, string url)> GetAutorizedTopicInfoAsync(MenuItem menuItem)
+    /// <summary>
+    /// Get topic info with authorization check
+    /// </summary>
+    /// <param name="menuItem">Menu item</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains topic's title and URL
+    ///</returns>
+    protected virtual async Task<(string title, string url)> GetAuthorizedTopicInfoAsync(MenuItem menuItem)
     {
         var topicId = menuItem.EntityId ?? 0;
         if (topicId == 0)
             return (await _localizationService.GetLocalizedAsync(menuItem, m => m.Title), string.Empty);
 
-        var topic = await _topicService.GetTopicByIdAsync(topicId, autorize: true);
+        var topic = await _topicService.GetTopicByIdAsync(topicId);
 
-        return (await _localizationService.GetLocalizedAsync(topic, m => m.Title), await _nopUrlHelper.RouteTopicUrlAsync(topic.SystemName));
+        if (topic is null || !topic.Published ||
+            !await _aclService.AuthorizeAsync(topic) ||
+            !await _storeMappingService.AuthorizeAsync(topic))
+        {
+            return (string.Empty, string.Empty);
+        }
+
+        var title = await _localizationService.GetLocalizedAsync(topic, m => m.Title);
+        var url = await _nopUrlHelper.RouteTopicUrlAsync(topic.SystemName);
+
+        return (title, url);
     }
 
-    protected virtual async Task<(string title, string url)> GetAutorizedVendorInfoAsync(MenuItem menuItem)
+    /// <summary>
+    /// Get vendor info with authorization check
+    /// </summary>
+    /// <param name="menuItem">Menu item</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result vendor's title and URL
+    ///</returns>
+    protected virtual async Task<(string title, string url)> GetAuthorizedVendorInfoAsync(MenuItem menuItem)
     {
         var vendorId = menuItem.EntityId ?? 0;
         if (vendorId == 0)
             return (await _localizationService.GetLocalizedAsync(menuItem, m => m.Title), _nopUrlHelper.RouteUrl(NopStandardRouteNames.Vendors));
 
-        var vendor = await _vendorService.GetVendorByIdAsync(vendorId, autorize: true);
+        var vendor = await _vendorService.GetVendorByIdAsync(vendorId);
+
+        if (vendor is null || vendor.Deleted || !vendor.Active)
+            return (string.Empty, string.Empty);
 
         var title = await _localizationService.GetLocalizedAsync(vendor, m => m.Name);
         var url = await _nopUrlHelper.RouteGenericEntityAsync(vendor);
@@ -393,11 +468,11 @@ public partial class MenuModelFactory : IMenuModelFactory
             (title, url) = menuItem.MenuItemType switch
             {
                 MenuItemType.StandardPage => (await _localizationService.GetLocalizedAsync(menuItem, mi => mi.Title), _nopUrlHelper.RouteUrl(menuItem.RouteName)),
-                MenuItemType.TopicPage => await GetAutorizedTopicInfoAsync(menuItem),
-                MenuItemType.Category => await GetAutorizedCategoryInfoAsync(menuItem),
-                MenuItemType.Manufacturer => await GetAutorizedManufacturerInfoAsync(menuItem),
-                MenuItemType.Vendor => await GetAutorizedVendorInfoAsync(menuItem),
-                MenuItemType.Product => await GetAutorizedProductInfoAsync(menuItem),
+                MenuItemType.TopicPage => await GetAuthorizedTopicInfoAsync(menuItem),
+                MenuItemType.Category => await GetAuthorizedCategoryInfoAsync(menuItem),
+                MenuItemType.Manufacturer => await GetAuthorizedManufacturerInfoAsync(menuItem),
+                MenuItemType.Vendor => await GetAuthorizedVendorInfoAsync(menuItem),
+                MenuItemType.Product => await GetAuthorizedProductInfoAsync(menuItem),
                 MenuItemType.CustomLink => (await _localizationService.GetLocalizedAsync(menuItem, mi => mi.Title), await _localizationService.GetLocalizedAsync(menuItem, mi => mi.Url)),
                 MenuItemType.Text => (await _localizationService.GetLocalizedAsync(menuItem, m => m.Title), string.Empty),
                 _ => (await _localizationService.GetLocalizedAsync(menuItem, m => m.Title), await _localizationService.GetLocalizedAsync(menuItem, mi => mi.Url))

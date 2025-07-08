@@ -12,12 +12,11 @@ public partial interface IVendorService
     /// Gets a vendor by vendor identifier
     /// </summary>
     /// <param name="vendorId">Vendor identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the vendor
     /// </returns>
-    Task<Vendor> GetVendorByIdAsync(int vendorId, bool autorize = false);
+    Task<Vendor> GetVendorByIdAsync(int vendorId);
 
     /// <summary>
     /// Gets a vendors by product identifiers

@@ -464,24 +464,13 @@ public partial class CategoryService : ICategoryService
     /// Gets a category
     /// </summary>
     /// <param name="categoryId">Category identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the category
     /// </returns>
-    public virtual async Task<Category> GetCategoryByIdAsync(int categoryId, bool autorize = false)
+    public virtual async Task<Category> GetCategoryByIdAsync(int categoryId)
     {
         var category = await _categoryRepository.GetByIdAsync(categoryId, cache => default);
-
-        if (!autorize)
-            return category;
-
-        if (category is null || category.Deleted || !category.Published ||
-            !await _aclService.AuthorizeAsync(category) ||
-            !await _storeMappingService.AuthorizeAsync(category))
-        {
-            return null;
-        }
 
         return category;
     }

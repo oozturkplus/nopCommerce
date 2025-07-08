@@ -18,12 +18,11 @@ public partial interface ITopicService
     /// Gets a topic
     /// </summary>
     /// <param name="topicId">The topic identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the topic
     /// </returns>
-    Task<Topic> GetTopicByIdAsync(int topicId, bool autorize = false);
+    Task<Topic> GetTopicByIdAsync(int topicId);
 
     /// <summary>
     /// Gets a topic

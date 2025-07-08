@@ -111,12 +111,11 @@ public partial interface ICategoryService
     /// Gets a category
     /// </summary>
     /// <param name="categoryId">Category identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the category
     /// </returns>
-    Task<Category> GetCategoryByIdAsync(int categoryId, bool autorize = false);
+    Task<Category> GetCategoryByIdAsync(int categoryId);
 
     /// <summary>
     /// Get categories for which a discount is applied

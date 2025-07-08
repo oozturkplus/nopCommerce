@@ -1438,7 +1438,7 @@ label, label + * {
 .footer-menu__toggle {
   display: block;
   width: 100%;
-  background: #4ab2f1 url(../Themes/DefaultClean/Content/images/toggle-white.png) right center no-repeat;
+  background: #4ab2f1 url('../images/toggle-white.png') right center no-repeat;
   padding: 10px 15px;
   font-size: 20px;
   color: #fff;

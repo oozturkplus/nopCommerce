@@ -45,22 +45,13 @@ public partial class VendorService : IVendorService
     /// Gets a vendor by vendor identifier
     /// </summary>
     /// <param name="vendorId">Vendor identifier</param>
-    /// <param name="autorize">A value indicating whether to check authorization access</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the vendor
     /// </returns>
-    public virtual async Task<Vendor> GetVendorByIdAsync(int vendorId, bool autorize = false)
+    public virtual async Task<Vendor> GetVendorByIdAsync(int vendorId)
     {
-        var vendor = await _vendorRepository.GetByIdAsync(vendorId, cache => default);
-
-        if (!autorize)
-            return vendor;
-
-        if (vendor is null || vendor.Deleted || !vendor.Active)
-            return null;
-
-        return vendor;
+        return await _vendorRepository.GetByIdAsync(vendorId, cache => default);
     }
 
     /// <summary>

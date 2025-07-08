@@ -1,6 +1,9 @@
-﻿using System.util;
+﻿using System.Linq.Expressions;
+using System.util;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Menus;
 using Nop.Core.Http;
 using Nop.Services;
@@ -71,6 +74,26 @@ public partial class MenuModelFactory : IMenuModelFactory
     #region Utilities
 
     /// <summary>
+    /// Gets title of the menu item
+    /// </summary>
+    /// <typeparam name="TEntity">Type of localized entity</typeparam>
+    /// <param name="menuItem">Menu item</param>
+    /// <param name="entity">Entity</param>
+    /// <param name="keySelector">Key selector</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation
+    /// The task result contains the localized title
+    /// </returns>
+    public virtual async Task<string> GetLocalizedMenuItemTitleAsync<TEntity>(MenuItem menuItem, TEntity entity, Expression<Func<TEntity, string>> keySelector)
+        where TEntity : BaseEntity, ILocalizedEntity
+    {
+        if (entity is null)
+            return await _localizationService.GetLocalizedAsync(menuItem, m => m.Title);
+
+        return await _localizationService.GetLocalizedAsync(entity, keySelector);
+    }
+
+    /// <summary>
     /// Prepare available menu items
     /// </summary>
     /// <param name="menuItemModel">Menu item model</param>
@@ -108,11 +131,11 @@ public partial class MenuModelFactory : IMenuModelFactory
         {
             titles.Insert(0, current.MenuItemType switch
             {
-                MenuItemType.Vendor => await _menuService.GetLocalizedMenuItemTitleAsync(current, await _vendorService.GetVendorByIdAsync(current.EntityId ?? 0, true), v => v.Name),
-                MenuItemType.Category => await _menuService.GetLocalizedMenuItemTitleAsync(current, await _categoryService.GetCategoryByIdAsync(current.EntityId ?? 0, true), v => v.Name),
-                MenuItemType.TopicPage => await _menuService.GetLocalizedMenuItemTitleAsync(current, await _topicService.GetTopicByIdAsync(current.EntityId ?? 0, true), v => v.Title),
-                MenuItemType.Product => await _menuService.GetLocalizedMenuItemTitleAsync(current, await _productService.GetProductByIdAsync(current.EntityId ?? 0, true), v => v.Name),
-                MenuItemType.Manufacturer => await _menuService.GetLocalizedMenuItemTitleAsync(current, await _manufacturerService.GetManufacturerByIdAsync(current.EntityId ?? 0, true), v => v.Name),
+                MenuItemType.Vendor => await GetLocalizedMenuItemTitleAsync(current, await _vendorService.GetVendorByIdAsync(current.EntityId ?? 0), v => v.Name),
+                MenuItemType.Category => await GetLocalizedMenuItemTitleAsync(current, await _categoryService.GetCategoryByIdAsync(current.EntityId ?? 0), v => v.Name),
+                MenuItemType.TopicPage => await GetLocalizedMenuItemTitleAsync(current, await _topicService.GetTopicByIdAsync(current.EntityId ?? 0), v => v.Title),
+                MenuItemType.Product => await GetLocalizedMenuItemTitleAsync(current, await _productService.GetProductByIdAsync(current.EntityId ?? 0), v => v.Name),
+                MenuItemType.Manufacturer => await GetLocalizedMenuItemTitleAsync(current, await _manufacturerService.GetManufacturerByIdAsync(current.EntityId ?? 0), v => v.Name),
                 _ => await _localizationService.GetLocalizedAsync(current, m => m.Title)
             });
             current = allItems.FirstOrDefault(x => x.Id == current.ParentId);

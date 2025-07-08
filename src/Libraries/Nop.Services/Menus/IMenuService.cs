@@ -83,20 +83,6 @@ public partial interface IMenuService
     #region Menu items
 
     /// <summary>
-    /// Gets title of the menu item
-    /// </summary>
-    /// <typeparam name="TEntity">Type of localized entity</typeparam>
-    /// <param name="menuItem">Menu item</param>
-    /// <param name="entity">Entity</param>
-    /// <param name="keySelector">Key selector</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the localized title
-    /// </returns>
-    Task<string> GetLocalizedMenuItemTitleAsync<TEntity>(MenuItem menuItem, TEntity entity, Expression<Func<TEntity, string>> keySelector)
-        where TEntity : BaseEntity, ILocalizedEntity;
-
-    /// <summary>
     /// Deletes a menu item
     /// </summary>
     /// <param name="menuItem">Menu item</param>

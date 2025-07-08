@@ -62,6 +62,36 @@ public partial class MenuController : BaseAdminController
         ViewBag.entityInfo = entityInfo;
     }
 
+    protected virtual async Task<MenuItem> SaveMenuItemAsync(MenuItemModel model, Func<MenuItem, Task> serviceAction)
+    {
+        ArgumentNullException.ThrowIfNull(model);
+
+        var menuItem = model.ToEntity<MenuItem>();
+
+        menuItem.EntityId = menuItem.MenuItemType switch
+        {
+            MenuItemType.Category => model.CategoryId,
+            MenuItemType.TopicPage => model.TopicId,
+            MenuItemType.Manufacturer => model.ManufacturerId,
+            MenuItemType.Vendor => model.VendorId,
+            MenuItemType.Product => model.ProductId,
+            _ => null
+        };
+
+        if ((menuItem.EntityId ?? 0) != 0)
+            menuItem.Template = MenuItemTemplate.Simple;
+
+        await serviceAction(menuItem);
+
+        //stores
+        await _storeMappingService.SaveStoreMappingsAsync(menuItem, model.SelectedStoreIds);
+
+        //locales
+        await UpdateMenuItemLocalesAsync(menuItem, model);
+
+        return menuItem;
+    }
+
     protected virtual async Task UpdateMenuLocalesAsync(Menu menu, MenuModel model)
     {
         foreach (var localized in model.Locales)
@@ -263,24 +293,7 @@ public partial class MenuController : BaseAdminController
 
         if (ModelState.IsValid)
         {
-            var menuItem = model.ToEntity<MenuItem>();
-
-            menuItem.EntityId = menuItem.MenuItemType switch
-            {
-                MenuItemType.Category => model.CategoryId,
-                MenuItemType.TopicPage => model.TopicId,
-                MenuItemType.Manufacturer => model.ManufacturerId,
-                MenuItemType.Vendor => model.VendorId,
-                MenuItemType.Product => model.ProductId,
-                _ => null
-            };
-
-            await _menuService.InsertMenuItemAsync(menuItem);
-
-            //stores
-            await _storeMappingService.SaveStoreMappingsAsync(menuItem, model.SelectedStoreIds);
-
-            await UpdateMenuItemLocalesAsync(menuItem, model);
+            var menuItem = await SaveMenuItemAsync(model, _menuService.InsertMenuItemAsync);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus.Added"));
 
@@ -332,24 +345,7 @@ public partial class MenuController : BaseAdminController
 
         if (ModelState.IsValid)
         {
-            menuItem = model.ToEntity(menuItem);
-
-            menuItem.EntityId = menuItem.MenuItemType switch
-            {
-                MenuItemType.Category => model.CategoryId,
-                MenuItemType.TopicPage => model.TopicId,
-                MenuItemType.Manufacturer => model.ManufacturerId,
-                MenuItemType.Vendor => model.VendorId,
-                MenuItemType.Product => model.ProductId,
-                _ => null
-            };
-
-            await _menuService.UpdateMenuItemAsync(menuItem);
-
-            //stores
-            await _storeMappingService.SaveStoreMappingsAsync(menuItem, model.SelectedStoreIds);
-
-            await UpdateMenuItemLocalesAsync(menuItem, model);
+            menuItem = await SaveMenuItemAsync(model, _menuService.UpdateMenuItemAsync);
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.ContentManagement.Menus.MenuItems.Updated"));
 

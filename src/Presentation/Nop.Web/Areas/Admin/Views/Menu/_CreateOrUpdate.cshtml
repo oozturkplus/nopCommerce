@@ -6,7 +6,7 @@
     var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
 
     const string hideMenuItemsBlockAttributeName = "MenuPage.HideMenuItemsBlock";
-    var hideMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMenuItemsBlockAttributeName, defaultValue: true);
+    var hideMenuItemsBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideMenuItemsBlockAttributeName);
 }
 
 <div asp-validation-summary="All"></div>

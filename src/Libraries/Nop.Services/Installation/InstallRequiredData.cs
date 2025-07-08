@@ -3579,7 +3579,7 @@ public partial class InstallationService
             {
                 MenuId = footerCustomerService.Id,
                 MenuItemType = MenuItemType.StandardPage,
-                RouteName = NopStandardRouteNames.Boards,
+                RouteName = NopStandardRouteNames.Blog,
                 Title = "Blog",
                 Published = true
             },

@@ -10650,6 +10650,9 @@
 <LocaleResource Name="Admin.ContentManagement.Menus.BackToList">
   <Value>back to menu list</Value>
 </LocaleResource>
+<LocaleResource Name="Admin.ContentManagement.Menus.Deleted">
+  <Value>The menu has been deleted successfully.</Value>
+</LocaleResource>
 <LocaleResource Name="Admin.ContentManagement.Menus.EditMenuDetails">
   <Value>Edit menu details</Value>
 </LocaleResource>
@@ -10660,7 +10663,7 @@
   <Value>Display all categories</Value>
 </LocaleResource>
 <LocaleResource Name="Admin.ContentManagement.Menus.Fields.DisplayAllCategories.Hint">
-  <Value>Check to put menu items generated for all root categories to the start of the menu.</Value>
+  <Value>Check to automatically display all categories in the menu. Otherwise, you may add appropriate menu items manually for all categories you want to be displayed in the menu.</Value>
 </LocaleResource>
 <LocaleResource Name="Admin.ContentManagement.Menus.Fields.DisplayOrder">
   <Value>Display order</Value>
