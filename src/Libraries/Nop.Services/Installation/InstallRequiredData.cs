@@ -2050,7 +2050,7 @@ public partial class InstallationService
             NumberOfSubItemsPerGridElement = 3,
             NumberOfItemsPerGridRow = 4,
             MaximumNumberEntities = 8,
-            GridThumbPictureSize = 220,
+            GridThumbPictureSize = 340,
             MaximumMainMenuLevels = 2
         });
     }

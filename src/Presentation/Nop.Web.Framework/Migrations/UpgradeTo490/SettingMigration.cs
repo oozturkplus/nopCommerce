@@ -187,7 +187,7 @@ public class SettingMigration : MigrationBase
 
         if (!settingService.SettingExists(menuSettings, settings => settings.GridThumbPictureSize))
         {
-            menuSettings.GridThumbPictureSize = 220;
+            menuSettings.GridThumbPictureSize = 340;
             settingService.SaveSetting(menuSettings, settings => settings.GridThumbPictureSize);
         }
 
