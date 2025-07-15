@@ -1399,9 +1399,7 @@ public partial class ProductController : BaseAdminController
     {
         var model = new ArtificialIntelligenceFullDescriptionModel
         {
-            ProductName = productName,
-            Keywords = "Corer i5, premium materials, go anywhere",
-            Instructions = "Add an laptop icon at the begining of description"
+            ProductName = productName
         };
 
         return View(model);

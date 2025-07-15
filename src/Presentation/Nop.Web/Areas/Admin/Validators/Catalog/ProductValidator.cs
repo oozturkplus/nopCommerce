@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Nop.Core.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -30,5 +31,24 @@ public partial class ProductValidator : BaseNopValidator<ProductModel>
             .When(x => x.AgeVerification);
 
         SetDatabaseValidationRules<Product>();
+    }
+}
+
+public partial class ArtificialIntelligenceFullDescriptionValidator : BaseNopValidator<ArtificialIntelligenceFullDescriptionModel>
+{
+    public ArtificialIntelligenceFullDescriptionValidator(ILocalizationService localizationService)
+    {
+        RuleFor(x => x.ProductName)
+            .NotEmpty()
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.AiFullDescription.ProductName.Required"));
+
+        RuleFor(x => x.Keywords)
+            .NotEmpty()
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.AiFullDescription.Keywords.Required"));
+
+        RuleFor(x => x.CustomToneOfVoice)
+            .NotEmpty()
+            .WithMessageAwait(localizationService.GetResourceAsync("Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required"))
+            .When(x => x.ToneOfVoiceId == (int)ToneOfVoiceType.Custom);
     }
 }
