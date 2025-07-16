@@ -1412,9 +1412,7 @@ public partial class ProductController : BaseAdminController
         if (!ModelState.IsValid) 
             return View(model);
 
-        var isSave = await Request.IsFormKeyExistsAsync("save");
-
-        if (isSave) 
+        if (model.SaveButtonClicked) 
             ViewBag.SaveDescription = true;
         else
             model.GeneratedDescription = await _artificialIntelligenceService.CrateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice);

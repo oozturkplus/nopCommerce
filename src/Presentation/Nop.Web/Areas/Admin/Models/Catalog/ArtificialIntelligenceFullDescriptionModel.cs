@@ -25,4 +25,6 @@ public partial record ArtificialIntelligenceFullDescriptionModel : BaseNopModel
 
     [NopResourceDisplayName("Admin.Catalog.Products.AiFullDescription.GeneratedDescription")]
     public string GeneratedDescription { get; set; }
+
+    public bool SaveButtonClicked { get; set; }
 }

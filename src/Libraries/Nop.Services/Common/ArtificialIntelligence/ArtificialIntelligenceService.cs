@@ -76,6 +76,7 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// </returns>
     public async Task<string> CrateProductDescriptionAsync(string productName, string keywords, ToneOfVoiceType toneOfVoice, string instruction, string customToneOfVoice = null)
     {
+        return "<h1>test</h1>";
         var toneOfVoiceInstruction = await GetTonOfVoiceInstructionAsync(toneOfVoice, customToneOfVoice);
 
         var query = string.Format(await _localizationService.GetResourceAsync("ArtificialIntelligence.ProductDescriptionQuery"), productName, keywords, toneOfVoiceInstruction, instruction);

@@ -303,11 +303,11 @@ public class LocalizationMigration : MigrationBase
             ["Enums.Nop.Core.ArtificialIntelligence.ToneOfVoiceType.Supportive"] = "Supportive",
             ["Enums.Nop.Core.ArtificialIntelligence.ToneOfVoiceType.Custom"] = "Custom",
             ["Enums.Nop.Core.ArtificialIntelligence.ArtificialIntelligenceProviderType.Gemini"] = "Gemini",
-            ["Enums.Nop.Core.ArtificialIntelligence.ArtificialIntelligenceProviderType.ChatGpt"] = "ChatGPT(OpenAI)",
+            ["Enums.Nop.Core.ArtificialIntelligence.ArtificialIntelligenceProviderType.ChatGpt"] = "ChatGPT (OpenAI)",
             ["Enums.Nop.Core.ArtificialIntelligence.ArtificialIntelligenceProviderType.DeepSeek"] = "DeepSeek",
             ["Admin.Catalog.Products.AiFullDescription.ProductName.Required"] = "Please provide a product name.",
-            ["Admin.Catalog.Products.AiFullDescription.Keywords.Required"] = "Please provide a couple features and keywords.",
-            ["Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required"] = "Please provide a tone of voice instructions.",
+            ["Admin.Catalog.Products.AiFullDescription.Keywords.Required"] = "Please provide a couple of features and keywords.",
+            ["Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required"] = "Please choose the tone of voice instructions.",
         }, languageId);
 
         #endregion
