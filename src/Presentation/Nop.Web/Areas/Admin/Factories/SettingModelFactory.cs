@@ -198,6 +198,7 @@ public partial class SettingModelFactory : ISettingModelFactory
         model.DeepSeekApiKey = artificialIntelligenceSettings.DeepSeekApiKey;
         model.GeminiApiKey = artificialIntelligenceSettings.GeminiApiKey;
         model.ProviderTypeId = (int)artificialIntelligenceSettings.ProviderType;
+        model.ProductDescriptionQuery = artificialIntelligenceSettings.ProductDescriptionQuery;
 
         //prepare available translation services
         var availableProviderType = await ArtificialIntelligenceProviderType.Gemini.ToSelectListAsync(false);

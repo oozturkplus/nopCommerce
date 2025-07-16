@@ -27,5 +27,8 @@ public partial record ArtificialIntelligenceSettingsModel : BaseNopModel
     [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.DeepSeekApiKey")]
     public string DeepSeekApiKey { get; set; }
 
+    [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery")]
+    public string ProductDescriptionQuery { get; set; }
+
     #endregion
 }

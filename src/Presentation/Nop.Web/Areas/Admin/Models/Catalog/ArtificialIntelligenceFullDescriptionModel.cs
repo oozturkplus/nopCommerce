@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog;
@@ -8,6 +9,11 @@ namespace Nop.Web.Areas.Admin.Models.Catalog;
 /// </summary>
 public partial record ArtificialIntelligenceFullDescriptionModel : BaseNopModel
 {
+    public ArtificialIntelligenceFullDescriptionModel()
+    {
+        AvailableLanguages = new List<SelectListItem>();
+    }
+
     [NopResourceDisplayName("Admin.Catalog.Products.AiFullDescription.ProductName")]
     public string ProductName { get; set; }
 
@@ -25,6 +31,10 @@ public partial record ArtificialIntelligenceFullDescriptionModel : BaseNopModel
 
     [NopResourceDisplayName("Admin.Catalog.Products.AiFullDescription.GeneratedDescription")]
     public string GeneratedDescription { get; set; }
+
+    [NopResourceDisplayName("Admin.Catalog.Products.AiFullDescription.Language")]
+    public int LanguageId { get; set; }
+    public IList<SelectListItem> AvailableLanguages { get; set; }
 
     public bool SaveButtonClicked { get; set; }
 }

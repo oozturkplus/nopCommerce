@@ -33,7 +33,14 @@ public partial class ArtificialIntelligenceSettings : ISettings
     public string DeepSeekApiKey { get; set; }
 
     /// <summary>
-    /// Gets a period (in seconds) before the request times out
+    /// Gets or sets a period (in seconds) before the request times out
     /// </summary>
     public int? RequestTimeout { get; set; }
+
+    /// <summary>
+    /// /// <summary>
+    /// Gets or sets a query format string for generate product description with AI
+    /// </summary>
+    /// </summary>
+    public string ProductDescriptionQuery { get; set; }
 }

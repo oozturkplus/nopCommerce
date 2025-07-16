@@ -15,9 +15,10 @@ public partial interface IArtificialIntelligenceService
     /// <param name="toneOfVoice">Tone of voice</param>
     /// <param name="instruction">Special instruction</param>
     /// <param name="customToneOfVoice">Custom tone of voice (applicable only for ToneOfVoiceType.Custom)</param>
+    /// <param name="languageId">The language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the generated product description
     /// </returns>
-    Task<string> CrateProductDescriptionAsync(string productName, string keywords, ToneOfVoiceType toneOfVoice, string instruction, string customToneOfVoice = null);
+    Task<string> CrateProductDescriptionAsync(string productName, string keywords, ToneOfVoiceType toneOfVoice, string instruction, string customToneOfVoice = null, int languageId=0);
 }

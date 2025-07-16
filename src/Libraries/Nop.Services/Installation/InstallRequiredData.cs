@@ -1472,7 +1472,8 @@ public partial class InstallationService
             DeepSeekApiKey = string.Empty,
             GeminiApiKey = string.Empty,
             ProviderType = ArtificialIntelligenceProviderType.Gemini,
-            RequestTimeout = ArtificialIntelligenceDefaults.RequestTimeout
+            RequestTimeout = ArtificialIntelligenceDefaults.RequestTimeout,
+            ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery
         });
 
         await SaveSettingAsync(dictionary, new LocalizationSettings

@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.ArtificialIntelligence;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -13,6 +14,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Common;
+using Nop.Services.Common.ArtificialIntelligence;
 using Nop.Services.Configuration;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo490;
@@ -185,6 +187,51 @@ public class SettingMigration : MigrationBase
         {
             addressSetting.PrePopulateCountryByCustomer = true;
             settingService.SaveSetting(addressSetting, settings => settings.PrePopulateCountryByCustomer);
+        }
+
+        //#7730
+        var aiSettings = settingService.LoadSetting<ArtificialIntelligenceSettings>();
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.Enabled))
+        {
+            aiSettings.Enabled = false;
+            settingService.SaveSetting(aiSettings, settings => settings.Enabled);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.ChatGptApiKey))
+        {
+            aiSettings.ChatGptApiKey = string.Empty;
+            settingService.SaveSetting(aiSettings, settings => settings.ChatGptApiKey);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.DeepSeekApiKey))
+        {
+            aiSettings.DeepSeekApiKey = string.Empty;
+            settingService.SaveSetting(aiSettings, settings => settings.DeepSeekApiKey);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.GeminiApiKey))
+        {
+            aiSettings.GeminiApiKey = string.Empty;
+            settingService.SaveSetting(aiSettings, settings => settings.GeminiApiKey);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.ProviderType))
+        {
+            aiSettings.ProviderType = ArtificialIntelligenceProviderType.Gemini;
+            settingService.SaveSetting(aiSettings, settings => settings.ProviderType);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.RequestTimeout))
+        {
+            aiSettings.RequestTimeout = ArtificialIntelligenceDefaults.RequestTimeout;
+            settingService.SaveSetting(aiSettings, settings => settings.RequestTimeout);
+        }
+
+        if (!settingService.SettingExists(aiSettings, settings => settings.ProductDescriptionQuery))
+        {
+            aiSettings.ProductDescriptionQuery = ArtificialIntelligenceDefaults.ProductDescriptionQuery;
+            settingService.SaveSetting(aiSettings, settings => settings.ProductDescriptionQuery);
         }
     }
 

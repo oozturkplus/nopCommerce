@@ -280,7 +280,6 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.AiFullDescription.Instructions"] = "Special instruction (optional)",
             ["Admin.Catalog.Products.AiFullDescription.Instructions.Placeholder"] = "e.g. Add an laptop icon at the beginning of description",
             ["Admin.Catalog.Products.AiFullDescription.GeneratedDescription"] = "Generated description",
-            ["ArtificialIntelligence.ProductDescriptionQuery"] = "Create a description for the product with the \"{0}\" name. Use the following features and keywords: {1}. Use a {2}. {3}.",
             ["ArtificialIntelligence.ToneOfVoice.Expert"] = "strong expert tone of voice",
             ["ArtificialIntelligence.ToneOfVoice.Supportive"] = "supportive and polite tone of voice",
             ["ArtificialIntelligence.CrateProductFailed"] = "<p style='color:red'>The request to the artificial intelligence service ended with the \"<strong>{0}</strong>\" error, you can see the details in the <a href='/Admin/Log/List' target='_blank'>logs</a><p>",
@@ -308,6 +307,9 @@ public class LocalizationMigration : MigrationBase
             ["Admin.Catalog.Products.AiFullDescription.ProductName.Required"] = "Please provide a product name.",
             ["Admin.Catalog.Products.AiFullDescription.Keywords.Required"] = "Please provide a couple of features and keywords.",
             ["Admin.Catalog.Products.AiFullDescription.CustomToneOfVoice.Required"] = "Please choose the tone of voice instructions.",
+            ["Admin.Catalog.Products.AiFullDescription.Language"] = "Target language",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery"] = "Artificial intelligence query",
+            ["Admin.Configuration.Settings.Catalog.ArtificialIntelligence.ProductDescriptionQuery.Hint"] = "Ste the query for create product description with artificial intelligence service",
         }, languageId);
 
         #endregion

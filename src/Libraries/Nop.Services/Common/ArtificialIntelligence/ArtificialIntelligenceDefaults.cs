@@ -51,4 +51,9 @@ public partial class ArtificialIntelligenceDefaults
     /// Gets a period (in seconds) before the request times out
     /// </summary>
     public static int RequestTimeout => 30;
+
+    /// <summary>
+    /// Gets a query format string for generate product description with AI
+    /// </summary>
+    public static string ProductDescriptionQuery => "Create a description on the {4} language for the product with the \"{0}\" name. Use the following features and keywords: {1}. Use a {2}. {3}.";
 }

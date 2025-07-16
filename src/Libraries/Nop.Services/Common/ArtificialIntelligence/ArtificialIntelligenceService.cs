@@ -1,4 +1,5 @@
 ﻿using Nop.Core.ArtificialIntelligence;
+using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 
@@ -13,8 +14,10 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
 
     protected readonly ArtificialIntelligenceHttpClient _httpClient;
     protected readonly ArtificialIntelligenceSettings _artificialIntelligenceSettings;
+    protected readonly ILanguageService _languageService;
     protected readonly ILocalizationService _localizationService;
     protected readonly ILogger _logger;
+    protected readonly LocalizationSettings _localizationSettings;
 
     #endregion
 
@@ -22,13 +25,17 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
 
     public ArtificialIntelligenceService(ArtificialIntelligenceHttpClient httpClient,
     ArtificialIntelligenceSettings artificialIntelligenceSettings,
+    ILanguageService languageService,
     ILocalizationService localizationService,
-        ILogger logger)
+        ILogger logger,
+    LocalizationSettings localizationSettings)
     {
         _httpClient = httpClient;
         _artificialIntelligenceSettings = artificialIntelligenceSettings;
+        _languageService = languageService;
         _localizationService = localizationService;
         _logger = logger;
+        _localizationSettings = localizationSettings;
     }
 
     #endregion
@@ -70,17 +77,22 @@ public partial class ArtificialIntelligenceService : IArtificialIntelligenceServ
     /// <param name="toneOfVoice">Tone of voice</param>
     /// <param name="instruction">Special instruction</param>
     /// <param name="customToneOfVoice">Custom tone of voice (applicable only for ToneOfVoiceType.Custom)</param>
+    /// <param name="languageId">The language identifier</param>
     /// <returns>
     /// A task that represents the asynchronous operation
     /// The task result contains the generated product description
     /// </returns>
-    public async Task<string> CrateProductDescriptionAsync(string productName, string keywords, ToneOfVoiceType toneOfVoice, string instruction, string customToneOfVoice = null)
+    public async Task<string> CrateProductDescriptionAsync(string productName, string keywords, ToneOfVoiceType toneOfVoice, string instruction, string customToneOfVoice = null, int languageId = 0)
     {
-        return "<h1>test</h1>";
         var toneOfVoiceInstruction = await GetTonOfVoiceInstructionAsync(toneOfVoice, customToneOfVoice);
 
-        var query = string.Format(await _localizationService.GetResourceAsync("ArtificialIntelligence.ProductDescriptionQuery"), productName, keywords, toneOfVoiceInstruction, instruction);
+        if (languageId == 0)
+            languageId = _localizationSettings.DefaultAdminLanguageId;
 
+        var lang = await _languageService.GetLanguageByIdAsync(languageId);
+        
+        var query = string.Format(string.IsNullOrEmpty(_artificialIntelligenceSettings.ProductDescriptionQuery) ? ArtificialIntelligenceDefaults.ProductDescriptionQuery : _artificialIntelligenceSettings.ProductDescriptionQuery, productName, keywords, toneOfVoiceInstruction, instruction, lang.Name);
+        
         try
         {
             return await _httpClient.SendQueryAsync(query);

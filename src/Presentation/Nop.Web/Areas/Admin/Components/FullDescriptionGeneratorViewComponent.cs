@@ -2,6 +2,7 @@
 using Nop.Core.ArtificialIntelligence;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Components;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Components;
 
@@ -29,10 +30,20 @@ public class FullDescriptionGeneratorViewComponent : NopViewComponent
 
     public IViewComponentResult Invoke(object additionalData)
     {
-        if (additionalData is not ProductModel model || !_artificialIntelligenceSettings.Enabled)
+        if (additionalData is not FullDescriptionGeneratorModel model || !_artificialIntelligenceSettings.Enabled)
             return Content(string.Empty);
 
         return View(model);
+    }
+
+    #endregion
+
+    #region Nested class
+
+    public partial record FullDescriptionGeneratorModel : BaseNopModel
+    {
+        public virtual string ProductNameElementId { get; set; }
+        public virtual int LanguageId { get; set; }
     }
 
     #endregion

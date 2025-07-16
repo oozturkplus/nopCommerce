@@ -14,7 +14,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Http;
-using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -52,6 +51,7 @@ public partial class ProductController : BaseAdminController
     protected readonly IAclService _aclService;
     protected readonly IArtificialIntelligenceService _artificialIntelligenceService;
     protected readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+    protected readonly IBaseAdminModelFactory _baseAdminModelFactory;
     protected readonly ICategoryService _categoryService;
     protected readonly ICopyProductService _copyProductService;
     protected readonly ICurrencyService _currencyService;
@@ -101,6 +101,7 @@ public partial class ProductController : BaseAdminController
         IAclService aclService,
         IArtificialIntelligenceService artificialIntelligenceService,
         IBackInStockSubscriptionService backInStockSubscriptionService,
+        IBaseAdminModelFactory baseAdminModelFactory,
         ICategoryService categoryService,
         ICopyProductService copyProductService,
         ICurrencyService currencyService,
@@ -145,6 +146,7 @@ public partial class ProductController : BaseAdminController
         _aclService = aclService;
         _artificialIntelligenceService = artificialIntelligenceService;
         _backInStockSubscriptionService = backInStockSubscriptionService;
+        _baseAdminModelFactory = baseAdminModelFactory;
         _categoryService = categoryService;
         _copyProductService = copyProductService;
         _currencyService = currencyService;
@@ -1395,12 +1397,15 @@ public partial class ProductController : BaseAdminController
     }
 
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_CREATE_EDIT_DELETE)]
-    public virtual IActionResult FullDescriptionGeneratorPopup(string productName)
+    public virtual async Task<IActionResult> FullDescriptionGeneratorPopup(int languageId, string productName)
     {
         var model = new ArtificialIntelligenceFullDescriptionModel
         {
-            ProductName = productName
+            ProductName = productName,
+            LanguageId = languageId
         };
+
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.Standard"));
 
         return View(model);
     }
@@ -1415,8 +1420,10 @@ public partial class ProductController : BaseAdminController
         if (model.SaveButtonClicked) 
             ViewBag.SaveDescription = true;
         else
-            model.GeneratedDescription = await _artificialIntelligenceService.CrateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice);
-
+            model.GeneratedDescription = await _artificialIntelligenceService.CrateProductDescriptionAsync(model.ProductName, model.Keywords, (ToneOfVoiceType)model.ToneOfVoiceId, model.Instructions, model.CustomToneOfVoice, model.LanguageId);
+        
+        await _baseAdminModelFactory.PrepareLanguagesAsync(model.AvailableLanguages, defaultItemText: await _localizationService.GetResourceAsync("Admin.Common.Standard"));
+        
         return View(model);
     }
 
