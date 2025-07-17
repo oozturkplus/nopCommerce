@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.Identity.Client;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -14,6 +15,7 @@ public partial record MaintenanceModel : BaseNopModel
         BackupFileSearchModel = new();
         DeleteAlreadySentQueuedEmails = new();
         DeleteMinificationFiles = new();
+        DeleteThumbsFiles = new();
     }
 
     public DeleteGuestsModel DeleteGuests { get; set; }
@@ -27,6 +29,8 @@ public partial record MaintenanceModel : BaseNopModel
     public DeleteAlreadySentQueuedEmailsModel DeleteAlreadySentQueuedEmails { get; set; }
 
     public DeleteMinificationFilesModel DeleteMinificationFiles { get; set; }
+
+    public DeleteThumbFilesModel DeleteThumbsFiles { get; set; }
 
     public bool BackupSupported { get; set; }
 
@@ -86,6 +90,15 @@ public partial record MaintenanceModel : BaseNopModel
     public partial record DeleteMinificationFilesModel : BaseNopModel
     {
         public int? NumberOfDeletedFiles { get; set; }
+    }
+
+    public partial record DeleteThumbFilesModel : BaseNopModel
+    {
+        public bool IsDeleteThumbsSupported { get; set; }
+        
+        public string FilesCountText { get; set; }
+        
+        public string FilesSizeText { get; set; }
     }
 
     #endregion
