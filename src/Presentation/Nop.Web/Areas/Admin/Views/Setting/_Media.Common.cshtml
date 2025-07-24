@@ -24,6 +24,24 @@
             <nop-action-confirmation asp-button-id="change-picture-storage" />
         </div>
     </div>
+    @if (!Model.PicturesStoredIntoDatabase)
+    {
+        <div class="form-group row advanced-setting">
+            <div class="col-md-3">
+                <nop-label asp-for="ImagePath" />
+            </div>
+            <div class="col-md-8">
+                <nop-editor asp-for="ImagePath" />
+                <span asp-validation-for="ImagePath"></span>
+            </div>
+            <div class="col-md-1">
+                <button type="submit" id="change-image-path" name="change-image-path" class="btn btn-primary">
+                    @T("Admin.Configuration.Settings.Media.ImagePath.Move")
+                </button>
+                <nop-action-confirmation asp-button-id="change-image-path" />
+            </div>
+        </div>
+    }
     <div class="form-group row">
         <div class="col-md-9 offset-md-3">
             <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>

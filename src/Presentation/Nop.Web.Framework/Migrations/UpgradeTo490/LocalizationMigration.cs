@@ -310,6 +310,12 @@ public class LocalizationMigration : MigrationBase
             ["Products.ProductHasBeenAddedToTheWishlistAndMoved.Link"] = "The product has been added to your <a href=\"{0}\">wishlist</a>. Want to move it to a <a href=\"#\" onclick=\"{1}\">custom wishlist</a>?",
             ["Wishlist.MultipleWishlistNotForGuest"] = "The multiple wishlist functionality is only available to registered customers.",
             ["Wishlist.NotAllowMultipleWishlist"] = "Multiple wishlist functionality is disabled.",
+
+            //#5986
+            ["Admin.Configuration.Settings.Media.ImagePath"] = "Path to the picture files",
+            ["Admin.Configuration.Settings.Media.ImagePath.Hint"] = "Setup the path on the file system to store the picture files",
+            ["Admin.Configuration.Settings.Media.ImagePath.Move"] = "Move images",
+            ["Admin.Configuration.Settings.Media.ImagePath.NotGrantedPermission"] = "The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions."
         }, languageId);
 
         #endregion

@@ -1618,7 +1618,8 @@ public partial class InstallationService
             AutoOrientImage = false,
             VideoIframeAllow = "fullscreen",
             VideoIframeWidth = 300,
-            VideoIframeHeight = 150
+            VideoIframeHeight = 150,
+            ImagePath = _fileProvider.GetAbsolutePath("images")
         });
 
         await SaveSettingAsync(dictionary, new StoreInformationSettings

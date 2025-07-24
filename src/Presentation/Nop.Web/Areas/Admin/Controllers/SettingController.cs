@@ -46,6 +46,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Security;
 using Nop.Web.Framework.WebOptimizer;
 
 namespace Nop.Web.Areas.Admin.Controllers;
@@ -1080,6 +1081,40 @@ public partial class SettingController : BaseAdminController
         await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
 
         _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
+
+        return RedirectToAction("Media");
+    }
+
+    [HttpPost, ActionName("Media")]
+    [FormValueRequired("change-image-path")]
+    [CheckPermission(StandardPermission.Configuration.MANAGE_SETTINGS)]
+    public virtual async Task<IActionResult> ChangeImagePath(MediaSettingsModel model)
+    {
+        try
+        {
+            if (!_fileProvider.DirectoryExists(model.ImagePath))
+            {
+                _fileProvider.CreateDirectory(model.ImagePath);
+            }
+
+            if (!_fileProvider.CheckPermissions(model.ImagePath, true, true, true, true))
+            {
+                _notificationService.ErrorNotification(string.Format(await _localizationService.GetResourceAsync("Admin.Configuration.Settings.Media.ImagePath.NotGrantedPermission"), CurrentOSUser.FullName, model.ImagePath));
+
+                return RedirectToAction("Media");
+            }
+
+            await _pictureService.ChangeImagePathAsync(model.ImagePath);
+
+            //activity log
+            await _customerActivityService.InsertActivityAsync("EditSettings", await _localizationService.GetResourceAsync("ActivityLog.EditSettings"));
+
+            _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ErrorNotification(ex.Message);
+        }
 
         return RedirectToAction("Media");
     }

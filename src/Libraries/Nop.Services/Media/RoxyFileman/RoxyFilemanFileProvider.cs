@@ -22,14 +22,10 @@ using SkiaSharp;
 
      #region Ctor
 
-     public RoxyFilemanFileProvider(INopFileProvider nopFileProvider) : base(nopFileProvider.Combine(nopFileProvider.WebRootPath, NopRoxyFilemanDefaults.DefaultRootDirectory))
-     {
-         _nopFileProvider = nopFileProvider;
-     }
-
-     public RoxyFilemanFileProvider(INopFileProvider defaultFileProvider, MediaSettings mediaSettings) : this(defaultFileProvider)
+     public RoxyFilemanFileProvider(INopFileProvider nopFileProvider, MediaSettings mediaSettings) : base(nopFileProvider.Combine(mediaSettings.ImagePath, NopRoxyFilemanDefaults.DefaultRootDirectory))
      {
          _mediaSettings = mediaSettings;
+         _nopFileProvider = nopFileProvider;
      }
 
      #endregion

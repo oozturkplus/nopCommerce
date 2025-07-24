@@ -131,4 +131,9 @@ public partial class MediaSettings : ISettings
     /// Gets or sets a value indicating whether we need to reorient images automatically
     /// </summary>
     public bool AutoOrientImage { get; set; }
+
+    /// <summary>
+    /// Gets a path to the image files
+    /// </summary>
+    public string ImagePath { get; set; }
 }
